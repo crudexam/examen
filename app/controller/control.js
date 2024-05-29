@@ -1,11 +1,14 @@
+import { config } from "dotenv";
 import pool from "../config/db.mysql.js";
 import {success, error} from "../config/msj.js"
 
+config();
+
 
 export const crearUser = async(req,res)=>{
-    const nombre = req.body.name;
+    const nombre = req.body.nombre;
     try {
-        const respuesta = await pool.query(`CALL sp_crearU('${nombre}');`);
+        const respuesta = await pool.query(`CALL sp_crear('${nombre}');`);
         if (respuesta[0].affectedRows == 1){
             success(req,res,200, "Usuario agregado");
         }else{
@@ -28,7 +31,7 @@ export const mostrarUser = async(req, res)=>{
 };
 
 export const mostrarUserID = async(req,res)=>{
-    let id = req.params['id'];
+    let id = req.params.id;
     try {   
         const respuesta = await pool.query(`CALL sp_buscar(${id});`);
         console.log(respuesta);
@@ -40,7 +43,7 @@ export const mostrarUserID = async(req,res)=>{
 
 export const modificarUser = async(req,res)=>{
     const id = req.body.id;
-    const nombre = req.body.name;
+    const nombre = req.body.nombre;
     try {
         const respuesta = await pool.query(`CALL sp_modificar('${id}','${nombre}');`);
         if (respuesta[0].affectedRows == 1){
